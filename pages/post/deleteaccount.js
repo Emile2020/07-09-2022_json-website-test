@@ -1,21 +1,24 @@
 //start the module.exports function
-module.exports = (app, fs, json, nodemailer, cryptojs, CryptoJS, transporter) => {
+module.exports = (app, fs, json, nodemailer, cryptojs, transporter) => {
     //create a post request
-    app.post('/createuser', (req, res) => {
+    app.post('/deleteaccount', (req, res) => {
         //check if token is valid
         if (req.body.token === 'token') {
             //get json data
             var json_data = require('../../database.json')
             //check if user exists
             if (json_data.user[req.body.mail] != undefined) {
-                res.json({ error: 'user already exists' })
-            } else {
-                //create user
-                json_data.user[req.body.mail] = {
-                    password: cryptojs.DES.encrypt(req.body.password, 'sleepyamr is sleepy').toString(),
-                    name: req.body.name,
-                    birthday: req.body.birthday,
-                }
+                //save old data to ./logdeletions.json
+                var log_data = require('../../logdeletions.json')
+                log_data.user[req.body.mail] = json_data.user[req.body.mail]
+                fs.writeFileSync('./logdeletions.json', JSON.stringify(log_data), (err) => {
+                    if (err) throw err;
+                    console.log('The file has been saved!');
+                });
+                //wait for file to be saved
+                setTimeout(() => {
+                //delete user
+                delete json_data.user[req.body.mail]
                 //save json data
                 fs.writeFileSync('./database.json', JSON.stringify(json_data), (err) => {
                     if (err) throw err;
@@ -31,8 +34,8 @@ module.exports = (app, fs, json, nodemailer, cryptojs, CryptoJS, transporter) =>
                 var mailOptions = {
                     from: 'emidblol@gmail.com',
                     to: req.body.mail,
-                    subject: 'New account created!',
-                    html : '<h1>Welcome ' + req.body.name + '!</h1><p>Someone created an account with your email! I wanted to thank you for signing up to my service. If it wasn\' you then please send a mail back! <br><br> Signed by <br><br> Emile </p>'
+                    subject: 'Account deleted!',
+                    html : '<h1>Goodbye ' + req.body.name + '!</h1><p>Someone deleted your account! I wanted to thank you for using my service. If it wasn\' you then please send a mail back! <br><br> Signed by <br><br> Emile </p>'
                 };
                 transporter.sendMail(mailOptions, function(error, info){
                     if (error) {
@@ -40,7 +43,10 @@ module.exports = (app, fs, json, nodemailer, cryptojs, CryptoJS, transporter) =>
                     } else {
                       console.log('Email sent: ' + info.response);
                     }
-                });
+                }
+                );}, 1000);
+            } else {
+                res.json({ error: 'user does not exist' })
             }
         } else {
             res.json({ error: 'invalid token' })

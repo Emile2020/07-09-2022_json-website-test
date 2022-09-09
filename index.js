@@ -30,7 +30,37 @@ const filesfiltered = files.filter(file => file !== `index.js`)
 //require all files
 filesfiltered.forEach(file => require(`./pages/post/${file}`)(app,fs,json,nodemailer,cryptojs,CryptoJS,transporter))
 
+//require all files in pages/get
+const filesget = fs.readdirSync(__dirname + "/pages/get")
+filesget.forEach(file => require(`./pages/get/${file}`)(app,fs,json,nodemailer,cryptojs,CryptoJS,transporter))
 //start server
 app.listen(3000, () => {
   console.log('server started');
 });
+//check if its someones birthday
+function checkbirthday() {
+    var json_data = require('./database.json')
+    var date = new Date()
+    var day = date.getDate()
+    var month = date.getMonth() + 1
+    var year = date.getFullYear()
+    var today = `${day}.${month}.${year}`
+    for (var i in json_data.user) {
+        if (json_data.user[i].birthday === today) {
+            var mailOptions = {
+                from: 'emidblol@gmail.com',
+                to: i,
+                subject: 'Happy birthday!',
+                text: 'Happy birthday! I hope you have a great day!'
+            };
+            transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  console.log(error);
+                } else {
+                  console.log('Email sent: ' + info.response);
+                }
+            }
+            );
+        }
+    }
+}
