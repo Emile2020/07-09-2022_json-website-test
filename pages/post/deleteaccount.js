@@ -2,6 +2,11 @@
 module.exports = (app, fs, json, nodemailer, cryptojs, transporter, token, hash_token) => {
     //create a post request
     app.post('/deleteaccount', (req, res) => {
+        
+        //set the 'allow-control-allow-origin' header for replit
+        res.header("Access-Control-Allow-Origin", "*");
+        //fix 'Blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.' error
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         //check if token is valid
         if (req.body.token === token) {
             //check if password is correct

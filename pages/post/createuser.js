@@ -2,6 +2,11 @@
 module.exports = (app, fs, json, nodemailer, cryptojs, CryptoJS, transporter) => {
     //create a post request
     app.post('/createuser', (req, res) => {
+        
+        //set the 'allow-control-allow-origin' header for replit
+        res.header("Access-Control-Allow-Origin", "*");
+        //fix 'Blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.' error
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
         //check if token is valid
         if (req.body.token === token) {
             //get json data
