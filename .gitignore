@@ -2,3 +2,6 @@
 .cache
 .upm
 node_modules
+database.json
+logdeletions.json
+.env

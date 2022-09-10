@@ -3,7 +3,7 @@ module.exports = (app, fs, json, nodemailer, cryptojs, transporter) => {
     //create a post request
     app.post('/changename', (req, res) => {
         //check if token is valid
-        if (req.body.token === 'token') {
+        if (req.body.token === token) {
             //get json data
             var json_data = require('../../database.json')
             if (json_data.user[req.body.mail]) {

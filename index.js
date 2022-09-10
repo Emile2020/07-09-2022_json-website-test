@@ -12,9 +12,11 @@ const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     user: 'emidblol@gmail.com',
-    pass: 'wfiyeofumjcnqwtx'
+    pass: process.env.password
   }
 });
+const hash_token = process.env.hash_token
+const token = process.env.token
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
@@ -28,7 +30,7 @@ const files = fs.readdirSync(__dirname + "/pages/post")
 const filesfiltered = files.filter(file => file !== `index.js`)
 
 //require all files
-filesfiltered.forEach(file => require(`./pages/post/${file}`)(app,fs,json,nodemailer,cryptojs,CryptoJS,transporter))
+filesfiltered.forEach(file => require(`./pages/post/${file}`)(app,fs,json,nodemailer,cryptojs,CryptoJS,transporter,hash_token,token))
 
 //require all files in pages/get
 const filesget = fs.readdirSync(__dirname + "/pages/get")
