@@ -3,7 +3,7 @@ module.exports = (app, fs, json, nodemailer, cryptojs, CryptoJS, transporter) =>
     //create a post request
     app.post('/createuser', (req, res) => {
         //check if token is valid
-        if (req.body.token === 'token') {
+        if (req.body.token === token) {
             //get json data
             var json_data = require('../../database.json')
             //check if user exists
@@ -12,7 +12,7 @@ module.exports = (app, fs, json, nodemailer, cryptojs, CryptoJS, transporter) =>
             } else {
                 //create user
                 json_data.user[req.body.mail] = {
-                    password: cryptojs.DES.encrypt(req.body.password, 'sleepyamr is sleepy').toString(),
+                    password: cryptojs.DES.encrypt(req.body.password, hash_token).toString(),
                     name: req.body.name,
                     birthday: req.body.birthday,
                 }

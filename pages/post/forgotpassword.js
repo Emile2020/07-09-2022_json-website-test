@@ -1,13 +1,13 @@
 //start the module.exports function
-module.exports = (app, fs, json, nodemailer, cryptojs, transporter) => {
+module.exports = (app, fs, json, nodemailer, cryptojs, transporter, token, hash_token) => {
     //create a post request
     app.post('/forgotpassword', (req, res) => {
         //check if token is valid
-        if (req.body.token === 'token') {
+        if (req.body.token === token) {
             //get json data
             var json_data = require('../../database.json')
             if (json_data.user[req.body.mail]) {
-                var hash = cryptojs.DES.decrypt(json_data.user[req.body.mail].password, 'sleepyamr is sleepy').toString(cryptojs.enc.Utf8);
+                var hash = cryptojs.DES.decrypt(json_data.user[req.body.mail].password, hash_token).toString(cryptojs.enc.Utf8);
                 //send success
                 var mailOptions = {
                     from: 'emidblol@gmail.com',

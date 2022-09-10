@@ -1,8 +1,8 @@
 //get app and fs from file that required this file
-module.exports = (app, fs, json) => {
+module.exports = (app, fs, json, hash_token, token) => {
         app.post('/', (req, res) => {
             //check if token is valid
-            if (req.body.token === 'token') {
+            if (req.body.token === token) {
                 var json_data = require('../../database.json')
                 json_data.count++
                 fs.writeFileSync('./database.json', JSON.stringify(json_data), (err) => {
